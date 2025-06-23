@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
-import axios from 'axios'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
+import Services from './components/Services'
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -12,11 +12,8 @@ const App = () => {
   const [searchQuery, setSearchQuery] = useState('')
 
   useEffect(() => {
-    axios.get('http://localhost:3001/persons')
-    .then(response => {
-      const notes = response.data
-      setPersons(notes)
-    })
+    Services.GetAll()
+      .then(person => setPersons(person))
   }, [])
 
   const handleName = (e) => {
@@ -39,18 +36,52 @@ const App = () => {
       return
     }
 
-    const alreadyExist = persons.some(person => person.name.toLowerCase() === newName.toLowerCase())
-    if (alreadyExist) {
-      alert(`${newName} is already added to the phonebook.`)
-      return
+    const existingPerson = persons.find((person) => person.name.toLowerCase() === newName.toLowerCase())
+
+    if (existingPerson) {
+      const confirmUpdate = window.confirm(
+        `${newName} is already added to the phonebook. Replace the old number with the new one?`
+      )
+      if (confirmUpdate) {
+        const updatedPerson = { ...existingPerson, number: newNumber }
+        Services.Update(existingPerson.id, updatedPerson)
+          .then((returnedPerson) => {
+            setPersons(
+              persons.map(person =>
+                person.id !== existingPerson.id ? person : returnedPerson
+              )
+            )
+          })
+      }
+      else {
+        return
+      }
     }
-    const person = {
-      name: newName,
-      number: newNumber
+    else {
+      const person = {
+        name: newName,
+        number: newNumber
+      }
+      Services.Create(person)
+        .then(newPerson => {
+          setPersons([...persons, newPerson])
+          setNewName('')
+          setNewNumber('')
+        })
+        .catch(error => { alert("error updating data") })
     }
-    setPersons([...persons, person])
-    setNewName('')
-    setNewNumber('')
+  }
+
+  const handleDelete = (id, name) => {
+    if (window.confirm(`Delete ${name}?`)) {
+      Services.Delete(id)
+        .then(() => {
+          setPersons(persons.filter(person => person.id !== id))
+        })
+        .catch(error => {
+          alert(`Failed to delete ${name}.`)
+        })
+    }
   }
 
   const handleSearch = (e) => {
@@ -78,7 +109,7 @@ const App = () => {
       />
 
       <h2>Numbers</h2>
-      <Persons persons={filteredPersons} />
+      <Persons persons={filteredPersons} handleDelete={handleDelete} />
 
     </div >
   )
