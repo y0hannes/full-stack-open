@@ -3,6 +3,7 @@ import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
 import Services from './components/Services'
+import Notification from './components/Notification'
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -10,6 +11,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [searchQuery, setSearchQuery] = useState('')
+  const [message, setMessage] = useState({})
 
   useEffect(() => {
     Services.GetAll()
@@ -27,12 +29,20 @@ const App = () => {
   const addPerson = (e) => {
     e.preventDefault()
     if (newName.length === 0) {
-      alert('Name cannot be empty.')
+      setMessage({
+        value: 'Name cannot be empty.',
+        error: true
+      })
+      setTimeout(() => setMessage({}), 5000)
       return
     }
 
     if (newNumber.length === 0) {
-      alert('Number cannot be empty.')
+      setMessage({
+        value: 'Number cannot be empty..',
+        error: true
+      })
+      setTimeout(() => setMessage({}), 5000)
       return
     }
 
@@ -52,6 +62,11 @@ const App = () => {
               )
             )
           })
+        setMessage({
+          value: `${newName}'s number is successfully updated`,
+          error: false
+        })
+        setTimeout(() => setMessage({}), 5000)
       }
       else {
         return
@@ -67,6 +82,11 @@ const App = () => {
           setPersons([...persons, newPerson])
           setNewName('')
           setNewNumber('')
+          setMessage({
+              value: `${newName} is successfully added`,
+              error: false
+            })
+          setTimeout(() => setMessage({}), 5000)
         })
         .catch(error => { alert("error updating data") })
     }
@@ -77,6 +97,11 @@ const App = () => {
       Services.Delete(id)
         .then(() => {
           setPersons(persons.filter(person => person.id !== id))
+          setMessage({
+            value: `${name} has been deleted`,
+            error: TextTrackCueList
+          })
+          setTimeout(() => setMessage({}), 5000)
         })
         .catch(error => {
           alert(`Failed to delete ${name}.`)
@@ -94,6 +119,7 @@ const App = () => {
 
   return (
     <div>
+      <Notification message={message} />
       <Filter
         value={searchQuery}
         onChange={handleSearch} />
