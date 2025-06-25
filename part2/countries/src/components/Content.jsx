@@ -1,13 +1,13 @@
 import Countries from "./Countries"
 import Country from "./Country"
 
-const Content = ({countries}) => {
+const Content = ({countries, onShow}) => {
   if (countries.length > 10) {
     return <p>Too many matches, specify another filter</p>
   }
 
   if (countries.length <= 10 && countries.length > 1) {
-    return <Countries countries={countries} />
+    return <Countries countries={countries} onClick={onShow}/>
   }
 
   if (countries.length === 1) {

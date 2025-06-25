@@ -35,10 +35,14 @@ const App = () => {
     setFilterCountries(filtered)
   }
 
+  const handleShow = (country) => {
+    setFilterCountries([country])
+  }
+
   return (
     <>
       <Input value={searchQuery} onChange={handleInput} />
-      <Content countries={filteredCountries} />
+      <Content countries={filteredCountries} onShow={handleShow} />
     </>
   )
 }
