@@ -1,4 +1,4 @@
-persons = [
+let persons = [
   {
     "id": "1",
     "name": "Arto Hellas",
@@ -22,8 +22,12 @@ persons = [
 ]
 
 const express = require('express')
+const morgan = require('morgan')
+
 const app = express()
 app.use(express.json())
+morgan.token('body', (req) => JSON.stringify(req.body));
+app.use(morgan(':method :url :status :response-time ms - :body'));
 
 const generateId = () => {
   return Math.floor(Math.random() * 10000).toString()
