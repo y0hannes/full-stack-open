@@ -13,6 +13,9 @@ app.use(express.static('dist'))
 
 app.use('/api', require('./routes'))
 
+const errorHandler = require('./errorHandler')
+app.use(errorHandler)
+
 const PORT = process.env.PORT || 3000
 
 app.listen(PORT, () => {
