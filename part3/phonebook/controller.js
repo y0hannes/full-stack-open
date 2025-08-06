@@ -1,5 +1,7 @@
 const Person = require("./model")
 
+const generateId = () => Math.floor(Math.random() * 1000 + 1).toString()
+
 const getContacts = (req, res, next) => {
   Person.find({})
     .then(persons => {
@@ -18,7 +20,8 @@ const getInfo = (req, res, next) => {
 }
 
 const getContact = (req, res, next) => {
-  Person.findById(req.params.id)
+  const id = req.params.id
+  Person.findOne({ id })
     .then(person => {
       if (person) {
         res.json(person)
@@ -30,7 +33,8 @@ const getContact = (req, res, next) => {
 }
 
 const deleteContact = (req, res, next) => {
-  Person.findByIdAndDelete(req.params.id)
+  id = req.params.id
+  Person.findOneAndDelete({ id })
     .then(() => {
       res.status(204).end()
     })
@@ -38,15 +42,16 @@ const deleteContact = (req, res, next) => {
 }
 
 const createContact = (req, res, next) => {
-  const body = req.body
+  const { name, number } = req.body
 
-  if (!body.name || !body.number) {
+  if (!name || !number) {
     return res.status(400).json({ error: 'name or number is missing' })
   }
-
+  const id = generateId()
   const person = new Person({
-    name: body.name,
-    number: body.number,
+    id,
+    name,
+    number
   })
 
   person.save()
@@ -57,13 +62,19 @@ const createContact = (req, res, next) => {
 }
 
 const updateContact = (req, res, next) => {
-  const { number } = req.body
+  const id = req.params.id
+  const { name, number } = req.body
 
-  Person.findByIdAndUpdate(
-    req.params.id,
+  Person.findOneAndUpdate(
+    { id },
     { number },
-    { new: true, runValidators: true, context: 'query' }
+    {
+      new: true,
+      runValidators: true,
+      context: 'query'
+    }
   )
+
     .then(updatedPerson => {
       res.json(updatedPerson)
     })

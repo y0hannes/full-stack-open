@@ -4,9 +4,9 @@ const mongoose = require('mongoose')
 const password = process.env.PASSWORD
 
 const connectDB = () => {
-  const url = `mongodb+srv://admin:${password}@cluster0.atz0moi.mongodb.net/phonebook?retryWrites=true&w=majority&appName=Cluster0`
+  const uri = `mongodb+srv://admin:${password}@cluster0.atz0moi.mongodb.net/phonebook?retryWrites=true&w=majority&appName=Cluster0`
   mongoose.set('strictQuery', false)
-  mongoose.connect(url).then(() => {
+  mongoose.connect(uri).then(() => {
     console.log('connected to atls')
   })
 }
