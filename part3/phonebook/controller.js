@@ -1,4 +1,4 @@
-const Person = require("./model")
+const Person = require('./model')
 
 const generateId = () => Math.floor(Math.random() * 1000 + 1).toString()
 
@@ -33,7 +33,7 @@ const getContact = (req, res, next) => {
 }
 
 const deleteContact = (req, res, next) => {
-  id = req.params.id
+  const id = req.params.id
   Person.findOneAndDelete({ id })
     .then(() => {
       res.status(204).end()
@@ -63,7 +63,7 @@ const createContact = (req, res, next) => {
 
 const updateContact = (req, res, next) => {
   const id = req.params.id
-  const { name, number } = req.body
+  const { number } = req.body
 
   Person.findOneAndUpdate(
     { id },
