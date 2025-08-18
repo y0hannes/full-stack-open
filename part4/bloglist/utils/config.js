@@ -1,16 +1,18 @@
-require('dotenv').config()
 const mongoose = require('mongoose')
+require('dotenv').config()
 
-const password = process.env.PASSWORD
+const MONGODB_URI = process.env.NODE_ENV === 'test' ?
+  process.env.TEST_MONGODB_URI : process.env.MONGODB_URI
 
-const connectDB = () => {
-  const uri = `mongodb+srv://admin:${password}@cluster0.atz0moi.mongodb.net/bloglist?retryWrites=true&w=majority&appName=Cluster0`
-  mongoose.set('strictQuery', false)
-  mongoose.connect(uri)
-  .then(() => {
-    console.log('connected to atls')
-  })
-  .catch(error => console.log(error))
+const connectDB = async () => {
+  try {
+    mongoose.set('strictQuery', false)
+    await mongoose.connect(MONGODB_URI)
+    console.log('connected to DB')
+  } catch (error) {
+    console.error('error connecting to DB:', error.message)
+    throw error
+  }
 }
 
 module.exports = connectDB
