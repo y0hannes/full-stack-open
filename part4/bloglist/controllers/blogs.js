@@ -14,7 +14,7 @@ router.get('/blogs', async (req, res) => {
   }
 })
 
-router.post('/blogs', async (req, res) => {
+router.post('/', async (req, res) => {
   try {
     const body = req.body
 
@@ -27,7 +27,7 @@ router.post('/blogs', async (req, res) => {
   }
 })
 
-router.put('/blogs/:id', async (req, res) => {
+router.put('/:id', async (req, res) => {
   try {
     const updated = await Blog.findByIdAndUpdate(req.params.id, req.body, { new: true })
     if (updated) {
@@ -40,7 +40,7 @@ router.put('/blogs/:id', async (req, res) => {
   }
 })
 
-router.delete('/blogs/:id', async (req, res) => {
+router.delete('/:id', async (req, res) => {
   try {
     const deleted = await Blog.findByIdAndDelete(req.params.id)
     if (deleted) {
