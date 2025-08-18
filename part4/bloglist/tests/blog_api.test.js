@@ -107,6 +107,63 @@ describe('When there is initially some blogs saved', () => {
 
 })
 
+describe('updating a blog', () => {
+  test('successfully updates likes of a blog', async () => {
+    const blogsAtStart = await api.get('/api/blogs')
+    const blogToUpdate = blogsAtStart.body[0]
+
+    const updatedBlog = { ...blogToUpdate, likes: blogToUpdate.likes + 1 }
+
+    const response = await api
+      .put(`/api/blogs/${blogToUpdate.id}`)
+      .send(updatedBlog)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    assert.strictEqual(response.body.likes, blogToUpdate.likes + 1)
+  })
+
+  test('returns 404 if blog does not exist', async () => {
+    const validNonexistingId = new mongoose.Types.ObjectId()
+    const updatedBlog = {
+      title: 'does not exist',
+      author: 'nobody',
+      url: 'http://none.com',
+      likes: 0
+    }
+
+    await api
+      .put(`/api/blogs/${validNonexistingId}`)
+      .send(updatedBlog)
+      .expect(404)
+  })
+})
+
+describe('deleting a blog', () => {
+  test('succeeds with status 204 if id is valid', async () => {
+    const blogsAtStart = await api.get('/api/blogs')
+    const blogToDelete = blogsAtStart.body[0]
+
+    await api
+      .delete(`/api/blogs/${blogToDelete.id}`)
+      .expect(204)
+
+    const blogsAtEnd = await api.get('/api/blogs')
+    assert.strictEqual(blogsAtEnd.body.length, blogsAtStart.body.length - 1)
+
+    const ids = blogsAtEnd.body.map(r => r.id)
+    assert(!ids.includes(blogToDelete.id))
+  })
+
+  test('returns 404 if blog already deleted or does not exist', async () => {
+    const validNonexistingId = new mongoose.Types.ObjectId()
+
+    await api
+      .delete(`/api/blogs/${validNonexistingId}`)
+      .expect(404)
+  })
+})
+
 after(async () => {
   await mongoose.connection.close()
 })
