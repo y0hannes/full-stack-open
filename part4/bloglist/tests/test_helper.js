@@ -1,11 +1,10 @@
-const oneBlog = [
-  {
-    title: 'Go To Statement Considered Harmful',
-    author: 'Edsger W. Dijkstra',
-    url: 'https://homepages.cwi.nl/~storm/teaching/reader/Dijkstra68.pdf',
-    likes: 5,
-  }
-]
+const oneBlog = {
+  title: 'Go To Statement Considered Harmful',
+  author: 'Edsger W. Dijkstra',
+  url: 'https://homepages.cwi.nl/~storm/teaching/reader/Dijkstra68.pdf',
+  likes: 5,
+}
+
 
 const listBlogs = [
   {
@@ -46,7 +45,65 @@ const listBlogs = [
   }
 ]
 
+const gooduser = {
+  username: 'kennad',
+  name: 'Kenn Adams',
+  password: 'kenngogo'
+}
+
+const userwithshortcredentials = {
+  username: 'pe',
+  name: 'peter Gregory',
+  password: 'pg'
+}
+
+const initialUsers = [
+  {
+    username: 'user',
+    name: 'user',
+    password: 'secret'
+  },
+  {
+    username: 'user2',
+    name: 'user2',
+    password: 'secret'
+  },
+]
+
+const loginUser = {
+  username: 'kennad',
+  password: 'kenngogo'
+}
+
+const notUniqueUser = {
+  username: 'kennad',
+  name: 'Kenn Adams',
+  password: 'kenngogo'
+}
+
+const userWithOutPassword = {
+  username: 'user3',
+  name: 'user3'
+}
+
+const loginWithWrongCredentials = {
+  username: 'kennadd',
+  password: 'kenngogo'
+}
+
+const loginWithOutPassword = {
+  username: 'kennadd'
+}
+
 module.exports = {
   listBlogs,
   oneBlog,
+  gooduser,
+  userwithshortcredentials,
+  initialUsers,
+  loginUser,
+  notUniqueUser,
+  userWithOutPassword,
+  loginWithWrongCredentials,
+  loginWithOutPassword
 }

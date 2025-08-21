@@ -4,6 +4,7 @@ const userSchema = mongoose.Schema({
   username: {
     type: String,
     required: true,
+    unique: true
   },
   name: {
     type: String,
@@ -13,12 +14,15 @@ const userSchema = mongoose.Schema({
     type: String,
     required: true
   },
-  blogs: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Blog'
-    }
-  ]
+  blogs: {
+    type: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Blog'
+      }
+    ],
+    default: []
+  },
 })
 
 userSchema.set('toJSON', {

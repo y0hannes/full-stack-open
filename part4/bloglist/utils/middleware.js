@@ -20,7 +20,7 @@ const errorHandler = (error, req, res, next) => {
 }
 
 const tokenExtractor = (req, res, next) => {
-  const authorization = req.get('authorization')
+  const authorization = req.get('Authorization')
   if (authorization && authorization.startsWith('Bearer ')) {
     req.token = authorization.replace('Bearer ', '')
   } else {
@@ -32,11 +32,18 @@ const tokenExtractor = (req, res, next) => {
 
 const userExtractor = async (req, res, next) => {
   if (req.token) {
-    const decodedToken = jwt.verify(req.token, process.env.JWT_SECRET_KEY)
-    if (!decodedToken.id) {
+    try {
+      const decodedToken = jwt.verify(req.token, process.env.JWT_SECRET_KEY)
+      if (decodedToken.id) {
+        req.user = await User.findById(decodedToken.id)
+      } else {
+        req.user = null
+      }
+    } catch (error) {
       req.user = null
     }
-    req.user = await User.findById(decodedToken.id)
+  } else {
+    req.user = null
   }
 
   next()
