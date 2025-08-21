@@ -8,7 +8,7 @@ userRouter = express.Router()
 userRouter.post('/login', async (req, res) => {
   const { username, password } = req.body
   const user = await User.findOne({ username })
-  const passwordVerified = user === null 
+  const passwordVerified = user === null
     ? false
     : await bcrypt.compare(password, user.passwordHash)
 
@@ -31,7 +31,15 @@ userRouter.post('/login', async (req, res) => {
 
 })
 
-userRouter.post('/', async (req, res) => {
+usersRouter.get('/', async (request, response) => {
+  const users = await User.find({}).populate(
+    'blogs',
+    { title: 1, url: 1, likes: 1 }
+  )
+  response.json(users)
+})
+
+userRouter.post('/', async (req, res, error) => {
   try {
     const { username, name, password } = req.body
     if (username.length < 3 || password.length < 3) {
@@ -50,8 +58,7 @@ userRouter.post('/', async (req, res) => {
 
   }
   catch (error) {
-    console.log(error)
-    res.status(400).json({ error: error.message })
+    next(error)
   }
 })
 
