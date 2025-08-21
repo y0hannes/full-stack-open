@@ -3,12 +3,17 @@ const express = require('express')
 const app = express()
 app.use(express.json())
 
+app.use('/api/login', require('./controllers/login'))
+
 // middlewares 
-const { tokenExtractor, userExtractor } = require('./utils/middleware')
+const { tokenExtractor, userExtractor, errorHandler } = require('./utils/middleware')
 app.use(tokenExtractor)
 app.use(userExtractor)
 
 app.use('/api/blogs', require('./controllers/blogs'))
 app.use('/api/users', require('./controllers/users'))
+
+// errer handler
+app.use(errorHandler)
 
 module.exports = app

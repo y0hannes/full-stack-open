@@ -5,33 +5,7 @@ const express = require('express')
 
 userRouter = express.Router()
 
-userRouter.post('/login', async (req, res) => {
-  const { username, password } = req.body
-  const user = await User.findOne({ username })
-  const passwordVerified = user === null
-    ? false
-    : await bcrypt.compare(password, user.passwordHash)
-
-  if (!(user && passwordVerified)) {
-    return res.status(401).json({
-      error: 'invalid username or password'
-    })
-  }
-
-  const userForToken = {
-    username: username,
-    userId: user._id
-  }
-
-  const token = jwt.sign(userForToken, process.env.JWT_SECRET_KEY)
-
-  res
-    .status(200)
-    .send({ token, username: user.username, name: user.name })
-
-})
-
-usersRouter.get('/', async (request, response) => {
+userRouter.get('/', async (request, response) => {
   const users = await User.find({}).populate(
     'blogs',
     { title: 1, url: 1, likes: 1 }
