@@ -17,12 +17,30 @@ const App = () => {
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
 
+  // load previously logged user
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs(blogs)
-    )
+    const loggedUser = window.localStorage.getItem('loggedUser')
+    if (loggedUser) {
+      const user = JSON.parse(loggedUser)
+      setUser(user)
+      blogService.setToken(user.token)
+      getBlogs()
+    }
   }, [])
 
+  const getBlogs = async () => {
+    try {
+      const blogs = await blogService.getAll()
+      setBlogs(blogs)
+    }
+    catch (error) {
+      setErrorMessage('error fetching blogs')
+      setSuccessMessage(null)
+      setTimeout(() => {
+        setErrorMessage('')
+      }, 5000);
+    }
+  }
   const handleLogin = async event => {
     event.preventDefault()
     try {
