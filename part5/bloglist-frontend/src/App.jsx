@@ -3,12 +3,19 @@ import Blog from './components/Blog'
 import blogService from './services/blogs'
 import LoginService from './services/login'
 import LoginForm from './components/LoginForm'
+import BlogForm from './components/BlogForm'
+import Notification from './components/Notification'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
+  const [successMessage, setSuccessMessage] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -27,10 +34,19 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
-      console.log('user logged in')
+      setSuccessMessage(`welcome back ${user.username}`)
+      setErrorMessage(null)
+      setTimeout(() => {
+        setSuccessMessage('')
+      }, 5000)
+
     }
     catch (error) {
-      console.log('Login failed', error)
+      setErrorMessage('wrong credentials')
+      setSuccessMessage(null)
+      setTimeout(() => {
+        setErrorMessage('')
+      }, 5000)
     }
   }
 
@@ -38,40 +54,82 @@ const App = () => {
     event.preventDefault()
     window.localStorage.removeItem('loggedUser')
     setUser(null)
+    setErrorMessage('logged out successfully')
+    setSuccessMessage(null)
+    setTimeout(() => {
+      setErrorMessage('')
+    }, 5000)
   }
 
+  const createBlog = async (event) => {
+    event.preventDefault()
+    try {
+      const response = await blogService.createBlog({
+        title, author, url
+      })
+      setSuccessMessage(`a new blog ${title} by ${author}`)
+      setTimeout(() => {
+        setSuccessMessage('')
+      }, 5000)
+      setTitle('')
+      setAuthor('')
+      setUrl('')
+    }
+    catch (error) {
+      setErrorMessage('can not create a blog')
+      setSuccessMessage(null)
+      setTimeout(() => {
+        setErrorMessage('')
+      }, 5000)
+    }
+  }
 
-  if (user === null) {
-    return (
-      <LoginForm
-        username={username}
-        password={password}
-        setUsername={setUsername}
-        setPassword={setPassword}
-        handleLogin={handleLogin}
+  return (
+    <div>
+      <Notification
+        successMessage={successMessage}
+        errorMessage={errorMessage}
       />
-    )
-  }
-  else {
-    return (
-      <div>
-        <p>
-          {user.username} is logged in
-          <button
-            onClick={handleLogout}
-            type="submit"
-          >
-            logout
-          </button>
-        </p>
+      {
+        user === null &&
+        <LoginForm
+          username={username}
+          password={password}
+          setUsername={setUsername}
+          setPassword={setPassword}
+          handleLogin={handleLogin}
+        />
+      }
+      {user &&
+        <div>
+          <p>
+            {user.username} is logged in
+            <button
+              onClick={handleLogout}
+              type="submit"
+            >
+              logout
+            </button>
+          </p>
 
-        <h2>blogs</h2>
-        {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} />
-        )}
-      </div>
-    )
-  }
+          <BlogForm
+            title={title}
+            author={author}
+            url={url}
+            setTitle={setTitle}
+            setAuthor={setAuthor}
+            setUrl={setUrl}
+            createBlog={createBlog}
+          />
+
+          <h2>blogs</h2>
+          {blogs.map(blog =>
+            <Blog key={blog.id} blog={blog} />
+          )}
+        </div>
+      }
+    </div>
+  )
 }
 
 export default App
