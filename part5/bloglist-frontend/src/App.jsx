@@ -6,6 +6,7 @@ import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
 import Togglable from './components/Toggleable'
+import axios from 'axios'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -99,6 +100,49 @@ const App = () => {
     }
   }
 
+  const updateBlog = async (updatedBlog) => {
+    try {
+      const { user, ...blogToUpdate } = updatedBlog
+      const response = await blogService.update(blogToUpdate)
+      setBlogs(blogs.map(
+        (blog) => blog.id !== updatedBlog.id ? blog : updatedBlog
+      ))
+      setSuccessMessage(`Blog ${updatedBlog.title} was successfully updated`)
+      setErrorMessage(null)
+      setTimeout(() => {
+        setSuccessMessage(null)
+      }, 5000)
+    }
+    catch (error) {
+      setErrorMessage('can not update blog')
+      setSuccessMessage(null)
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+    }
+  }
+
+  const deleteBlog = async deletedBlog => {
+    try {
+      const response = await blogService.remove(deletedBlog)
+      setBlogs(blogs.filter(
+        (blog) => blog.id !== deletedBlog.id
+      ))
+      setSuccessMessage(`Blog ${deletedBlog.title} was successfully deleted`)
+      setErrorMessage(null)
+      setTimeout(() => {
+        setSuccessMessage(null)
+      }, 5000)
+    }
+    catch (error) {
+      setErrorMessage('can not delete blog')
+      setSuccessMessage(null)
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+    }
+  }
+
   return (
     <div>
       <Notification
@@ -137,7 +181,12 @@ const App = () => {
 
           <h2>blogs</h2>
           {blogs.map(blog =>
-            <Blog key={blog.id} blog={blog} />
+            <Blog
+              key={blog.id}
+              blog={blog}
+              updateBlog={updateBlog}
+              deleteBlog={deleteBlog}
+            />
           )}
         </div>
       }
