@@ -6,7 +6,6 @@ import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
 import Togglable from './components/Toggleable'
-import axios from 'axios'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -33,12 +32,12 @@ const App = () => {
       const blogs = await blogService.getAll()
       setBlogs(blogs)
     }
-    catch (error) {
+    catch {
       setErrorMessage('error fetching blogs')
       setSuccessMessage(null)
       setTimeout(() => {
         setErrorMessage(null)
-      }, 5000);
+      }, 5000)
     }
   }
   const handleLogin = async event => {
@@ -60,7 +59,7 @@ const App = () => {
 
       getBlogs()
     }
-    catch (error) {
+    catch {
       setErrorMessage('wrong credentials')
       setSuccessMessage(null)
       setTimeout(() => {
@@ -83,7 +82,7 @@ const App = () => {
   const createBlog = async (newBlog) => {
     try {
       blogFormRef.current.toggleVisibility()
-      const response = await blogService.create(newBlog)
+      await blogService.create(newBlog)
       setSuccessMessage(`a new blog ${newBlog.title} by ${newBlog.author}`)
       setBlogs(blogs.concat(newBlog))
       setTimeout(() => {
@@ -91,8 +90,8 @@ const App = () => {
       }, 5000)
       setErrorMessage(null)
     }
-    catch (error) {
-      setErrorMessage('can not create a blog')
+    catch {
+      setErrorMessage(`can not create a blog ${newBlog.title}`)
       setSuccessMessage(null)
       setTimeout(() => {
         setErrorMessage(null)
@@ -102,19 +101,19 @@ const App = () => {
 
   const updateBlog = async (updatedBlog) => {
     try {
-      const { user, ...blogToUpdate } = updatedBlog
-      const response = await blogService.update(blogToUpdate)
+      const { user: _user, ...blogToUpdate } = updatedBlog
+      await blogService.update(blogToUpdate)
       setBlogs(blogs.map(
         (blog) => blog.id !== updatedBlog.id ? blog : updatedBlog
       ))
-      setSuccessMessage(`Blog ${updatedBlog.title} was successfully updated`)
+      setSuccessMessage(`blog ${updatedBlog.title} was successfully updated`)
       setErrorMessage(null)
       setTimeout(() => {
         setSuccessMessage(null)
       }, 5000)
     }
-    catch (error) {
-      setErrorMessage('can not update blog')
+    catch {
+      setErrorMessage(`can not update blog ${updatedBlog.title}`)
       setSuccessMessage(null)
       setTimeout(() => {
         setErrorMessage(null)
@@ -124,18 +123,20 @@ const App = () => {
 
   const deleteBlog = async deletedBlog => {
     try {
-      const response = await blogService.remove(deletedBlog)
-      setBlogs(blogs.filter(
-        (blog) => blog.id !== deletedBlog.id
-      ))
-      setSuccessMessage(`Blog ${deletedBlog.title} was successfully deleted`)
-      setErrorMessage(null)
-      setTimeout(() => {
-        setSuccessMessage(null)
-      }, 5000)
+      if (window.confirm(`Delete ${deletedBlog.title} ?`)) {
+        await blogService.remove(deletedBlog)
+        setBlogs(blogs.filter(
+          (blog) => blog.id !== deletedBlog.id
+        ))
+        setSuccessMessage(`blog ${deletedBlog.title} was successfully deleted`)
+        setErrorMessage(null)
+        setTimeout(() => {
+          setSuccessMessage(null)
+        }, 5000)
+      }
     }
-    catch (error) {
-      setErrorMessage('can not delete blog')
+    catch {
+      setErrorMessage(`can not delete blog ${deletedBlog.title}`)
       setSuccessMessage(null)
       setTimeout(() => {
         setErrorMessage(null)
