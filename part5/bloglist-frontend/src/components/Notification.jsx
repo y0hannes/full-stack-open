@@ -1,24 +1,40 @@
-const Notification = (props) => {
-  const { successMessage, errorMessage } = props
-  const message = successMessage ? successMessage : errorMessage
+const error = {
+  color: 'red',
+  background: 'lightgrey',
+  fontSize: 20,
+  borderColor: 'red',
+  borderStyle: 'solid',
+  borderRadius: 5,
+  padding: 10,
+  marginBottom: 10
+}
 
-  const messageStyle = {
-    color: errorMessage ? 'red' : 'green',
-    backgroundColor: 'lightgray',
-    fontSize: '20px',
-    borderStyle: 'solid',
-    borderColor: errorMessage ? 'red' : 'green',
-    borderRadius: '5px',
-    padding: '10px',
-    marginBottom: '10px'
-  }
-  if (successMessage || errorMessage) {
-    return(
-      <p style={messageStyle}> {message} </p>
-    )
-  }
-  else {
+const success = {
+  color: 'green',
+  background: 'lightgrey',
+  fontSize: 20,
+  borderColor: 'green',
+  borderStyle: 'solid',
+  borderRadius: 5,
+  padding: 10,
+  marginBottom: 10
+}
+
+const Notification = ({ errorMessage, successMessage }) => {
+  if (successMessage === null && errorMessage === null) {
     return null
+  } else if (successMessage){
+    return (
+      <div id='success' style={success}>
+        {successMessage}
+      </div>
+    )
+  } else {
+    return (
+      <div id='error' style={error}>
+        {errorMessage}
+      </div>
+    )
   }
 }
 

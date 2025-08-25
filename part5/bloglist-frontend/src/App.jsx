@@ -1,21 +1,20 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import LoginService from './services/login'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
+import Togglable from './components/Toggleable'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [successMessage, setSuccessMessage] = useState('')
-  const [errorMessage, setErrorMessage] = useState('')
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
+  const [successMessage, setSuccessMessage] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
+  const blogFormRef = useRef(false)
 
   // load previously logged user
   useEffect(() => {
@@ -37,7 +36,7 @@ const App = () => {
       setErrorMessage('error fetching blogs')
       setSuccessMessage(null)
       setTimeout(() => {
-        setErrorMessage('')
+        setErrorMessage(null)
       }, 5000);
     }
   }
@@ -55,15 +54,16 @@ const App = () => {
       setSuccessMessage(`welcome back ${user.username}`)
       setErrorMessage(null)
       setTimeout(() => {
-        setSuccessMessage('')
+        setSuccessMessage(null)
       }, 5000)
 
+      getBlogs()
     }
     catch (error) {
       setErrorMessage('wrong credentials')
       setSuccessMessage(null)
       setTimeout(() => {
-        setErrorMessage('')
+        setErrorMessage(null)
       }, 5000)
     }
   }
@@ -75,29 +75,26 @@ const App = () => {
     setErrorMessage('logged out successfully')
     setSuccessMessage(null)
     setTimeout(() => {
-      setErrorMessage('')
+      setErrorMessage(null)
     }, 5000)
   }
 
-  const createBlog = async (event) => {
-    event.preventDefault()
+  const createBlog = async (newBlog) => {
     try {
-      const response = await blogService.createBlog({
-        title, author, url
-      })
-      setSuccessMessage(`a new blog ${title} by ${author}`)
+      blogFormRef.current.toggleVisibility()
+      const response = await blogService.create(newBlog)
+      setSuccessMessage(`a new blog ${newBlog.title} by ${newBlog.author}`)
+      setBlogs(blogs.concat(newBlog))
       setTimeout(() => {
-        setSuccessMessage('')
+        setSuccessMessage(null)
       }, 5000)
-      setTitle('')
-      setAuthor('')
-      setUrl('')
+      setErrorMessage(null)
     }
     catch (error) {
       setErrorMessage('can not create a blog')
       setSuccessMessage(null)
       setTimeout(() => {
-        setErrorMessage('')
+        setErrorMessage(null)
       }, 5000)
     }
   }
@@ -130,15 +127,13 @@ const App = () => {
             </button>
           </p>
 
-          <BlogForm
-            title={title}
-            author={author}
-            url={url}
-            setTitle={setTitle}
-            setAuthor={setAuthor}
-            setUrl={setUrl}
-            createBlog={createBlog}
-          />
+          <Togglable
+            buttonLabel="Add new blog"
+            ref={blogFormRef}>
+            <BlogForm
+              createBlog={createBlog}
+            />
+          </Togglable>
 
           <h2>blogs</h2>
           {blogs.map(blog =>
