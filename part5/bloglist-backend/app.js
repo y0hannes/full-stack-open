@@ -5,7 +5,7 @@ app.use(express.json())
 
 app.use('/api/login', require('./controllers/login'))
 
-if (process.env.NODE_ENV === 'test') {  
+if (process.env.NODE_ENV !== 'production') {  
   const testingRouter = require('./controllers/testing')  
   app.use('/api/testing', testingRouter)}
 
