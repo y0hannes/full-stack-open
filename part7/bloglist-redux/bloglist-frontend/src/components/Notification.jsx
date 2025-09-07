@@ -1,3 +1,5 @@
+import { useSelector } from 'react-redux'
+
 const error = {
   color: 'red',
   background: 'lightgrey',
@@ -20,19 +22,24 @@ const success = {
   marginBottom: 10
 }
 
-const Notification = ({ errorMessage, successMessage }) => {
-  if (successMessage === null && errorMessage === null) {
+const Notification = () => {
+  const notification = useSelector(state => state.notification)
+
+  if (notification === null){
     return null
-  } else if (successMessage){
-    return (
-      <div id='success' style={success}>
-        {successMessage}
-      </div>
-    )
-  } else {
+  }
+
+  if (notification.startsWith('Error:')) {
     return (
       <div id='error' style={error}>
-        {errorMessage}
+        {notification}
+      </div>
+    )
+  }
+  else {
+    return (
+      <div id='success' style={success}>
+        {notification}
       </div>
     )
   }
