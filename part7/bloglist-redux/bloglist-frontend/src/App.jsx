@@ -8,15 +8,16 @@ import Notification from './components/Notification'
 import Togglable from './components/Toggleable'
 import { useSelector, useDispatch } from 'react-redux'
 import { initializeBlogs, addBlog, modifyBlog, removeBlog } from './reducers/blogsReducer'
+import { loginUser, logoutUser, initializeUser } from './reducers/authReducer'
 
 const App = () => {
   const dispatch = useDispatch()
   const blogs = useSelector(state => state.blogs)
+  const user = useSelector(state => state.user)
   const blogFormRef = useRef(false)
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [user, setUser] = useState(null)
   const [successMessage, setSuccessMessage] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
 
@@ -25,9 +26,7 @@ const App = () => {
   useEffect(() => {
     const loggedUser = window.localStorage.getItem('loggedUser')
     if (loggedUser) {
-      const user = JSON.parse(loggedUser)
-      setUser(user)
-      blogService.setToken(user.token)
+      dispatch(initializeUser(loggedUser))
     }
   }, [])
 
@@ -38,12 +37,7 @@ const App = () => {
   const handleLogin = async event => {
     event.preventDefault()
     try {
-      const user = await LoginService.login({ username, password })
-      window.localStorage.setItem(
-        'loggedUser', JSON.stringify(user)
-      )
-      blogService.setToken(user.token)
-      setUser(user)
+      const user = dispatch(loginUser({ username, password }))
       setUsername('')
       setPassword('')
       setSuccessMessage(`welcome back ${user.username}`)
@@ -52,7 +46,7 @@ const App = () => {
         setSuccessMessage(null)
       }, 5000)
     }
-    catch {
+    catch (exception) {
       setErrorMessage('wrong credentials')
       setSuccessMessage(null)
       setTimeout(() => {
@@ -63,8 +57,7 @@ const App = () => {
 
   const handleLogout = event => {
     event.preventDefault()
-    window.localStorage.removeItem('loggedUser')
-    setUser(null)
+    dispatch(logoutUser())
     setErrorMessage('logged out successfully')
     setSuccessMessage(null)
     setTimeout(() => {
