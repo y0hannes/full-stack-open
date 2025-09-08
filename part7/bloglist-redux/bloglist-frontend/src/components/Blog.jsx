@@ -1,27 +1,7 @@
 import { useState } from "react"
+import { Link } from "react-router-dom"
 
-const Blog = ({ blog, updateBlog, deleteBlog }) => {
-  const [visible, setVisible] = useState(false)
-
-  const showWhenVisible = { display: visible ? '' : 'none' }
-
-  const toggleVisiblity = () => {
-    setVisible(!visible)
-  }
-
-  const buttonLabel = visible ? 'hide' : 'view'
-  const increaseLike = event => {
-    event.preventDefault()
-    updateBlog({
-      ...blog,
-      likes: blog.likes + 1
-    })
-  }
-
-  const removeBlog = event => {
-    event.preventDefault()
-    deleteBlog(blog)
-  }
+const Blog = ({ blog }) => {
 
   const blogStyle = {
     paddingTop: 10,
@@ -33,24 +13,9 @@ const Blog = ({ blog, updateBlog, deleteBlog }) => {
 
   return (
     < div style={blogStyle} >
-      <div className="blog-header">
+      <Link to={`/${blog.id}`}>
         {blog.title} {blog.author}
-        <button onClick={toggleVisiblity}>{buttonLabel}</button>
-      </div>
-      <div style={showWhenVisible} className="blog-details">
-        {blog.url}
-        <br />
-        Likes {blog.likes}
-        <button
-          onClick={increaseLike}>
-          Like
-        </button>
-        <br />
-        <button
-          onClick={removeBlog}>
-          remove
-        </button>
-      </div>
+      </Link>
     </div >
   )
 }

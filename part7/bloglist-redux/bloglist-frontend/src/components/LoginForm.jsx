@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { useDispatch } from "react-redux"
+import {useNavigate} from 'react-router-dom'
 import { createNotification } from "../reducers/notificationReducer"
 import { loginUser } from "../reducers/authReducer"
 
@@ -8,6 +9,7 @@ const LoginForm = () => {
   const [password, setPassword] = useState('')
 
   const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   const handleLogin = (event) => {
     event.preventDefault()
@@ -16,6 +18,7 @@ const LoginForm = () => {
       setUsername('')
       setPassword('')
       dispatch(createNotification(`welcome back ${user.username}`))
+      navigate('/')
     }
     catch (exception) {
       dispatch(createNotification('Error: wrong credentials'))

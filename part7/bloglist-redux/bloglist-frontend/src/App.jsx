@@ -31,45 +31,29 @@ const App = () => {
     dispatch(initializeBlogs())
   }, [dispatch])
 
-  const handleLogout = (event) => {
-    event.preventDefault()
-    dispatch(logoutUser())
-    dispatch(createNotification('logged out successfully'))
-  }
-
   return (
     <div>
       <Notification />
-      <Menu />
       {
         user === null &&
         <LoginForm />
       }
       {user &&
         <div>
-          <p>
-            {user.username} is logged in
-            <button
-              onClick={handleLogout}
-              type="submit"
-            >
-              logout
-            </button>
-          </p>
-
+          <Menu />
           <Togglable
             buttonLabel="Add new blog"
             ref={blogFormRef}>
             <BlogForm />
           </Togglable>
+          <Routes>
+            <Route path='/' element={<Blogs />} />
+            <Route path='/users' element={<Users />} />
+            <Route path='/users/:id' element={<User />} />
+            <Route path='/:id' element={<BlogDetail />} />
+          </Routes>
         </div>
       }
-      <Routes>
-        <Route path='/' element={<Blogs />} />
-        <Route path='/users' element={<Users />} />
-        <Route path='/users/:id' element={<User />} />
-        {/* <Route path='/:id' element={<BlogDetail blog={blog} />} /> */}
-      </Routes>
     </div>
   )
 }

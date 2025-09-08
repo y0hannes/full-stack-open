@@ -13,9 +13,14 @@ const setToken = newTtoken => {
   }
 }
 
-const getAll = () => {
-  const request = axios.get(baseUrl)
-  return request.then(response => response.data)
+const getAll = async () => {
+  const response = await axios.get(baseUrl)
+  return response.data
+}
+
+const getBlog = async (id) => {
+  const response = await axios.get(`${baseUrl}/${id}`, config)
+  return response.data
 }
 
 const create = async blog => {
@@ -33,4 +38,4 @@ const remove = async blog => {
   return response.data
 }
 
-export default { getAll, create, update, remove, setToken }
+export default { getAll, getBlog, create, update, remove, setToken }

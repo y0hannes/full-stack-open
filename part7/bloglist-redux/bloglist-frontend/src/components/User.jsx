@@ -1,18 +1,12 @@
-import { useEffect, useState } from "react"
 import Blog from "./Blog"
 import { useParams } from "react-router-dom"
-import usersServices from "../services/usersServices"
+import { useSelector } from "react-redux"
 
 const User = () => {
-  const [user, setUser] = useState(null)
   const id = useParams().id
-  useEffect(() => {
-    const fetch = async () => {
-      const response = await usersServices.getUser(id)
-      setUser(response)
-    }
-    fetch()
-  }, [id])
+  const users = useSelector(state => state.users)
+
+  const user = users.find(user => user.id === id)
 
   if (!user) {
     return null
