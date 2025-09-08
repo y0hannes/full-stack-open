@@ -1,5 +1,27 @@
-const LoginForm = (props) => {
-  const { username, password, setUsername, setPassword, handleLogin } = props
+import { useState } from "react"
+import { useDispatch } from "react-redux"
+import { createNotification } from "../reducers/notificationReducer"
+import { loginUser } from "../reducers/authReducer"
+
+const LoginForm = () => {
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+
+  const dispatch = useDispatch()
+
+  const handleLogin = (event) => {
+    event.preventDefault()
+    try {
+      const user = dispatch(loginUser({ username, password }))
+      setUsername('')
+      setPassword('')
+      dispatch(createNotification(`welcome back ${user.username}`))
+    }
+    catch (exception) {
+      dispatch(createNotification('Error: wrong credentials'))
+    }
+  }
+
   return (
     <div>
       <h2>log in to application</h2>

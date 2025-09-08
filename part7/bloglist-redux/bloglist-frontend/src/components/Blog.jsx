@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState } from "react"
 
 const Blog = ({ blog, updateBlog, deleteBlog }) => {
   const [visible, setVisible] = useState(false)
@@ -10,7 +10,6 @@ const Blog = ({ blog, updateBlog, deleteBlog }) => {
   }
 
   const buttonLabel = visible ? 'hide' : 'view'
-
   const increaseLike = event => {
     event.preventDefault()
     updateBlog({
@@ -33,7 +32,7 @@ const Blog = ({ blog, updateBlog, deleteBlog }) => {
   }
 
   return (
-    <div style={blogStyle}>
+    < div style={blogStyle} >
       <div className="blog-header">
         {blog.title} {blog.author}
         <button onClick={toggleVisiblity}>{buttonLabel}</button>
