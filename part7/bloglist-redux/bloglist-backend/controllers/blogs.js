@@ -5,10 +5,12 @@ const router = express.Router()
 
 router.get('/', async (req, res, next) => {
   try {
-    const blogs = await Blog.find({}).populate(
-      'user',
-      { username: 1, name: 1 }
-    )
+    const blogs = await Blog.find({})
+      .populate(
+        'user',
+        { username: 1, name: 1 }
+      )
+      .populate('comments', { content: 1 })
     res.status(200).json(blogs)
   }
   catch (error) {

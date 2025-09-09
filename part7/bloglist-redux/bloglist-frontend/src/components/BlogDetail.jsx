@@ -2,6 +2,7 @@ import { useNavigate, useParams } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
 import { createNotification } from "../reducers/notificationReducer"
 import { modifyBlog, removeBlog } from "../reducers/blogsReducer"
+import Comments from "./Comments"
 
 const BlogDetail = () => {
   const id = useParams().id
@@ -49,20 +50,12 @@ const BlogDetail = () => {
     deleteBlog(blog)
   }
 
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5
-  }
-
   if (!blog) {
     return null
   }
 
   return (
-    < div style={blogStyle} >
+    <div>
       {blog.title} {blog.author}
       {blog.url}
       <br />
@@ -76,6 +69,7 @@ const BlogDetail = () => {
         onClick={handleRemove}>
         remove
       </button>
+      <Comments blog={blog} />
     </div >
   )
 }
