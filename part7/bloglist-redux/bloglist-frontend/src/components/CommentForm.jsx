@@ -1,19 +1,19 @@
-import { useState } from "react"
-import { useParams } from "react-router-dom"
-import { useDispatch } from "react-redux"
-import { commentBlog } from "../reducers/blogsReducer"
+import { useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { commentBlog } from '../reducers/blogsReducer';
 
 const CommentForm = () => {
-  const [content, setContent] = useState('')
-  const id = useParams().id
-  const dispatch = useDispatch()
+  const [content, setContent] = useState('');
+  const id = useParams().id;
+  const dispatch = useDispatch();
 
-  const createComment = event => {
-    event.preventDefault()
-    const comment = {content}
-    dispatch(commentBlog(id, comment))
-    setContent('')
-  }
+  const createComment = (event) => {
+    event.preventDefault();
+    const comment = { content };
+    dispatch(commentBlog(id, comment));
+    setContent('');
+  };
 
   return (
     <form onSubmit={createComment}>
@@ -25,7 +25,7 @@ const CommentForm = () => {
       />
       <button type="submit">Add comment</button>
     </form>
-  )
-}
+  );
+};
 
-export default CommentForm
+export default CommentForm;

@@ -1,37 +1,39 @@
-import { useState } from 'react'
-import { useDispatch } from 'react-redux'
-import { addBlog } from '../reducers/blogsReducer'
-import { createNotification } from '../reducers/notificationReducer'
+import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { addBlog } from '../reducers/blogsReducer';
+import { createNotification } from '../reducers/notificationReducer';
 
 const BlogForm = ({ blogFormRef }) => {
-
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
-  const dispatch = useDispatch()
+  const [title, setTitle] = useState('');
+  const [author, setAuthor] = useState('');
+  const [url, setUrl] = useState('');
+  const dispatch = useDispatch();
 
   const createBlog = async (newBlog) => {
     try {
-      blogFormRef?.current?.toggleVisibility()
-      dispatch(addBlog(newBlog))
-      dispatch(createNotification(`a new blog ${newBlog.title} by ${newBlog.author}`))
+      blogFormRef?.current?.toggleVisibility();
+      dispatch(addBlog(newBlog));
+      dispatch(
+        createNotification(`a new blog ${newBlog.title} by ${newBlog.author}`)
+      );
+    } catch {
+      dispatch(
+        createNotification(`Error: can not create a blog ${newBlog.title}`)
+      );
     }
-    catch {
-      dispatch(createNotification(`Error: can not create a blog ${newBlog.title}`))
-    }
-  }
+  };
 
-  const handleSubmit = event => {
-    event.preventDefault()
+  const handleSubmit = (event) => {
+    event.preventDefault();
     createBlog({
       title,
       author,
-      url
-    })
-    setTitle('')
-    setAuthor('')
-    setUrl('')
-  }
+      url,
+    });
+    setTitle('');
+    setAuthor('');
+    setUrl('');
+  };
 
   return (
     <div>
@@ -68,15 +70,12 @@ const BlogForm = ({ blogFormRef }) => {
           />
         </label>
         <br />
-        <button
-          type="submit"
-          id="create-btn"
-        >
+        <button type="submit" id="create-btn">
           create
         </button>
       </form>
     </div>
-  )
-}
+  );
+};
 
-export default BlogForm
+export default BlogForm;

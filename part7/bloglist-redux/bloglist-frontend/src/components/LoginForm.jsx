@@ -1,35 +1,33 @@
-import { useState } from "react"
-import { useDispatch } from "react-redux"
-import {useNavigate} from 'react-router-dom'
-import { createNotification } from "../reducers/notificationReducer"
-import { loginUser } from "../reducers/authReducer"
+import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { createNotification } from '../reducers/notificationReducer';
+import { loginUser } from '../reducers/authReducer';
 
 const LoginForm = () => {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
 
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleLogin = (event) => {
-    event.preventDefault()
+    event.preventDefault();
     try {
-      const user = dispatch(loginUser({ username, password }))
-      setUsername('')
-      setPassword('')
-      dispatch(createNotification(`welcome back ${user.username}`))
-      navigate('/')
+      const user = dispatch(loginUser({ username, password }));
+      setUsername('');
+      setPassword('');
+      dispatch(createNotification(`welcome back ${user.username}`));
+      navigate('/');
+    } catch (exception) {
+      dispatch(createNotification('Error: wrong credentials'));
     }
-    catch (exception) {
-      dispatch(createNotification('Error: wrong credentials'))
-    }
-  }
+  };
 
   return (
     <div>
       <h2>log in to application</h2>
       <form onSubmit={handleLogin}>
-
         <label>
           username
           <input
@@ -46,19 +44,16 @@ const LoginForm = () => {
             type="password"
             id="password"
             value={password}
-            onChange={({ target }) => setPassword(target.value)} />
+            onChange={({ target }) => setPassword(target.value)}
+          />
         </label>
         <br />
-        <button
-          id='login-login-btn'
-          type="submit"
-        >
+        <button id="login-login-btn" type="submit">
           login
         </button>
       </form>
+    </div>
+  );
+};
 
-    </div >
-  )
-}
-
-export default LoginForm
+export default LoginForm;

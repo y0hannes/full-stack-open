@@ -1,48 +1,46 @@
-import { createSlice } from "@reduxjs/toolkit"
-import loginServices from "../services/loginServices"
-import blogServices from "../services/blogServices"
+import { createSlice } from '@reduxjs/toolkit';
+import loginServices from '../services/loginServices';
+import blogServices from '../services/blogServices';
 
-const initialState = null
+const initialState = null;
 
 const authSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
     login(state, action) {
-      return action.payload
+      return action.payload;
     },
     logout(State) {
-      return null
-    }
-  }
-})
+      return null;
+    },
+  },
+});
 
-export const initializeUser = loggedUser => {
+export const initializeUser = (loggedUser) => {
   return async (dispatch) => {
-    const user = JSON.parse(loggedUser)
-    dispatch(login(user))
-    blogServices.setToken(user.token)
-  }
-}
+    const user = JSON.parse(loggedUser);
+    dispatch(login(user));
+    blogServices.setToken(user.token);
+  };
+};
 
-export const loginUser = credentials => {
+export const loginUser = (credentials) => {
   return async (dispatch) => {
-    const user = await loginServices.login(credentials)
-    dispatch(login(user))
-    window.localStorage.setItem(
-      'loggedUser', JSON.stringify(user)
-    )
-    blogServices.setToken(user.token)
-    return user
-  }
-}
+    const user = await loginServices.login(credentials);
+    dispatch(login(user));
+    window.localStorage.setItem('loggedUser', JSON.stringify(user));
+    blogServices.setToken(user.token);
+    return user;
+  };
+};
 
 export const logoutUser = () => {
   return async (dispatch) => {
-    dispatch(logout())
-    window.localStorage.removeItem('loggedUser')
-  }
-}
+    dispatch(logout());
+    window.localStorage.removeItem('loggedUser');
+  };
+};
 
-export const { login, logout } = authSlice.actions
-export default authSlice.reducer
+export const { login, logout } = authSlice.actions;
+export default authSlice.reducer;
