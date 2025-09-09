@@ -1,47 +1,25 @@
 import { useSelector } from 'react-redux';
 
-const error = {
-  color: 'red',
-  background: 'lightgrey',
-  fontSize: 20,
-  borderColor: 'red',
-  borderStyle: 'solid',
-  borderRadius: 5,
-  padding: 10,
-  marginBottom: 10,
-};
-
-const success = {
-  color: 'green',
-  background: 'lightgrey',
-  fontSize: 20,
-  borderColor: 'green',
-  borderStyle: 'solid',
-  borderRadius: 5,
-  padding: 10,
-  marginBottom: 10,
-};
-
 const Notification = () => {
   const notification = useSelector((state) => state.notification);
 
-  if (notification === null) {
-    return null;
-  }
+  if (!notification) return null;
 
-  if (notification.startsWith('Error:')) {
-    return (
-      <div id="error" style={error}>
-        {notification}
-      </div>
-    );
-  } else {
-    return (
-      <div id="success" style={success}>
-        {notification}
-      </div>
-    );
-  }
+  const isError = notification.startsWith('Error:');
+
+  return (
+    <div
+      className={`max-w-lg mx-auto my-4 px-4 py-2 rounded border shadow-sm transition-all duration-300
+        ${
+          isError
+            ? 'bg-red-100 text-red-800 border-red-200'
+            : 'bg-green-100 text-green-800 border-green-200'
+        }
+      `}
+    >
+      {notification}
+    </div>
+  );
 };
 
 export default Notification;
