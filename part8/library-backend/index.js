@@ -122,7 +122,7 @@ const typeDefs = `
       title: String!
       published: Int!
       author: String!
-      genres: [String!]
+      genres: [String!]!
       ): Book!
     
     editAuthor (
@@ -165,7 +165,7 @@ const resolvers = {
   },
   Mutation: {
     addBook: (root, args) => {
-      const authorExsit = authors.find((author) => author === args.author);
+      const authorExsit = authors.find((author) => author.name === args.author);
       if (!authorExsit) {
         const newAuthor = {
           name: args.author,
@@ -181,12 +181,21 @@ const resolvers = {
       return newBook;
     },
     editAuthor: (root, args) => {
-      const existingAuthor = authors.find(author => author.name === args.name)
-      if (!existingAuthor){
-        return null
+      const existingAuthor = authors.find((author) => author.name === args.name);
+      if (!existingAuthor) {
+        return null;
       }
-      existingAuthor.born = args.setBornTo
-      return existingAuthor
+      const updatedAuthor = {
+        ...existingAuthor,
+        born: args.setBornTo,
+      };
+      authors = authors.map((author) =>
+        author.name === args.name ? updatedAuthor : author
+      );
+      return {
+        ...updatedAuthor,
+        bookCount: books.filter((book) => book.author === args.name).length,
+      };
     },
   },
 };
