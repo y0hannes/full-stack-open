@@ -6,13 +6,17 @@ const Authors = (props) => {
   if (!props.show) {
     return null;
   }
-  const response = useQuery(ALL_AUTHORS);
+  const result = useQuery(ALL_AUTHORS);
 
-  if (response.loading) {
+  if (result.loading) {
     return <div>loading...</div>;
   }
 
-  const authors = response.data.allAuthors;
+  if (!result.data || !result.data.allAuthors) {
+    return <div>No authors found.</div>;
+  }
+
+  const authors = result.data.allAuthors;
 
   return (
     <div>
@@ -36,7 +40,7 @@ const Authors = (props) => {
         </table>
       </div>
       <div>
-        <EditBirthYear />
+        {props.token && <EditBirthYear />}
       </div>
     </div>
   );

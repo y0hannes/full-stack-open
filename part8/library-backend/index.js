@@ -25,6 +25,7 @@ const typeDefs = `
     name: String!
     born: Int
     bookCount: Int!
+    id: ID!
   }
   type Book {
     title: String!
@@ -110,18 +111,23 @@ const resolvers = {
       }
 
       let author = await Author.findOne({ name: args.author });
+
       if (!author) {
-        author = new Author({ name: args.author });
-        try {
-          await author.save();
-        } catch (error) {
-          throw new GraphQLError('Saving author failed', {
-            extensions: {
-              code: 'BAD_USER_INPUT',
-              error,
-            },
-          });
-        }
+        author = new Author({ name: args.author, bookCount: 1 });
+      } else {
+        author.bookCount = (author.bookCount || 0) + 1;
+      }
+
+      try {
+        await author.save();
+      } catch (error) {
+        console.error('Author save failed:', error);
+        throw new GraphQLError('Saving author failed', {
+          extensions: {
+            code: 'BAD_USER_INPUT',
+            error,
+          },
+        });
       }
 
       const book = new Book({ ...args, author: author._id });
@@ -199,6 +205,10 @@ const resolvers = {
 const server = new ApolloServer({
   typeDefs,
   resolvers,
+});
+
+startStandaloneServer(server, {
+  listen: { port: 4000 },
   context: async ({ req }) => {
     const auth = req ? req.headers.authorization : null;
 
@@ -216,10 +226,6 @@ const server = new ApolloServer({
     }
     return {};
   },
-});
-
-startStandaloneServer(server, {
-  listen: { port: 4000 },
 }).then(({ url }) => {
   console.log(`Server ready at ${url}`);
 });
