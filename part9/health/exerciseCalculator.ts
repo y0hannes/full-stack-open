@@ -62,7 +62,7 @@ const parseArguments = (args: string[]): Values => {
   };
 };
 
-const calculateExercise = (
+export const calculateExercise = (
   dailyExerciseHours: number[],
   target: number
 ): Result => {
@@ -86,11 +86,13 @@ const calculateExercise = (
   };
 };
 
-try {
-  const { dailyExerciseHours, target } = parseArguments(process.argv);
-  console.log(calculateExercise(dailyExerciseHours, target));
-} catch (error: unknown) {
-  if (error instanceof Error) {
-    console.log('Error:', error.message);
+if (import.meta.url === `file://${process.argv[1]}`) {
+  try {
+    const { dailyExerciseHours, target } = parseArguments(process.argv);
+    console.log(calculateExercise(dailyExerciseHours, target));
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.log('Error:', error.message);
+    }
   }
 }
