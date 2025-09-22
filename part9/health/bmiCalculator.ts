@@ -27,7 +27,7 @@ const enum BmiCategory {
   ObeseClassIII = 'Obese Class III (Very severe)',
 }
 
-const calculateBmi = (height: number, weight: number): string => {
+export const calculateBmi = (height: number, weight: number): string => {
   const bmi = weight / Math.pow(height / 100, 2);
 
   if (bmi < 16) return BmiCategory.UnderweightSevereThinness;
@@ -40,11 +40,13 @@ const calculateBmi = (height: number, weight: number): string => {
   return BmiCategory.ObeseClassIII;
 };
 
-try {
-  const { height, weight } = parseArgs(process.argv);
-  console.log(calculateBmi(height, weight));
-} catch (error: unknown) {
-  if (error instanceof Error) {
-    console.log('Error:', error.message);
+if (import.meta.url === `file://${process.argv[1]}`) {
+  try {
+    const { height, weight } = parseArgs(process.argv);
+    console.log(calculateBmi(height, weight));
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.log('Error:', error.message);
+    }
   }
 }
