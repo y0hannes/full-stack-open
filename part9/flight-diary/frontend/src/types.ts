@@ -21,3 +21,10 @@ export type DiaryFormProps = {
 export type NotificationProps = {
   error: string | null;
 };
+
+export type RadioButtonProps = {
+  name: string;
+  button: string;
+  currentValue: string;
+  onChange: (choosen: string) => void;
+};
