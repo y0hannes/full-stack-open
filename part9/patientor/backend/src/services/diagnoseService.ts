@@ -1,4 +1,4 @@
-import diagnosesData from '../../date/diagnoses';
+import diagnosesData from '../../data/diagnoses';
 
 const getAll = () => {
   return diagnosesData;
