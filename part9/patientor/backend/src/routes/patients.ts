@@ -20,13 +20,19 @@ const newPatientParser = (req: Request, _res: Response, next: NextFunction) => {
   }
 };
 
+router.get('/:id', (req, res) => {
+  const patient = patientService.getById(req.params.id);
+  if (patient) {
+    res.json(patient);
+  } else {
+    res.status(404).send({ Error: 'patient not found' });
+  }
+});
+
 router.post(
   '/',
   newPatientParser,
-  (
-    req: Request<unknown, unknown, NewPatientEntry>,
-    res: Response<Patient>
-  ) => {
+  (req: Request<unknown, unknown, NewPatientEntry>, res: Response<Patient>) => {
     const addedEntity = patientService.addPatient(req.body);
     res.json(addedEntity);
   }

@@ -12,12 +12,18 @@ const getAll = (): NonSsnPatient[] => {
   }));
 };
 
+const getById = (id: string): Patient | undefined => {
+  return patientData.find((patient) => patient.id === id);
+};
+
 const addPatient = (newPatientEntry: NewPatientEntry): Patient => {
   const newPatient: Patient = {
     id: uuid(),
     ...newPatientEntry,
+    entries: []
   };
   patientData.push(newPatient);
   return newPatient;
 };
-export default { getAll, addPatient };
+
+export default { getAll, getById, addPatient };
