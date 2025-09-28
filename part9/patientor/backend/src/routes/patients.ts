@@ -2,7 +2,7 @@ import express, { Request, Response, NextFunction } from 'express';
 import patientService from '../services/patientService';
 import { newPatientEntry } from '../utils';
 import { z } from 'zod';
-import { NewPatientEntry, Patient } from '../types';
+import { Entry, NewPatientEntry, Patient, NewEntry } from '../types';
 
 const router = express.Router();
 
@@ -35,6 +35,24 @@ router.post(
   (req: Request<unknown, unknown, NewPatientEntry>, res: Response<Patient>) => {
     const addedEntity = patientService.addPatient(req.body);
     res.json(addedEntity);
+  }
+);
+
+router.post(
+  '/:id/entries',
+  (
+    req: Request<{ id: string }, unknown, NewEntry>,
+    res: Response<Entry | { error: string }>
+  ) => {
+    const id = req.params.id;
+    const newPatientEntry = req.body;
+    const addedEntry = patientService.addEntry(id, newPatientEntry);
+
+    if (!addedEntry) {
+      return res.status(404).json({ error: 'Patient not found' });
+    }
+
+    return res.json(addedEntry);
   }
 );
 

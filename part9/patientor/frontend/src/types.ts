@@ -1,4 +1,3 @@
-
 export interface DiagnoseEntry {
   code: string;
   name: string;
@@ -14,10 +13,10 @@ interface BaseEntry {
 }
 
 export enum HealthCheckRating {
-  'Healthy' = 0,
-  'LowRisk' = 1,
-  'HighRisk' = 2,
-  'CriticalRisk' = 3
+  Healthy = 0,
+  LowRisk = 1,
+  HighRisk = 2,
+  CriticalRisk = 3,
 }
 
 interface HealthCheckEntry extends BaseEntry {
@@ -65,9 +64,42 @@ export interface Patient {
 
 export type NonSsnPatient = Omit<Patient, 'ssn' | 'entries'>;
 
-export type PatientFormValues = Omit<Patient, "id" | "entries">;
+export type PatientFormValues = Omit<Patient, 'id' | 'entries'>;
+
+export type NewHospitalEntry = Omit<HospitalEntry, 'id'>;
+export type NewOccupationalHealthcareEntry = Omit<
+  OccupationalHealthcareEntry,
+  'id'
+>;
+export type NewHealthCheckEntry = Omit<HealthCheckEntry, 'id'>;
+
+export type NewEntry =
+  | NewHospitalEntry
+  | NewOccupationalHealthcareEntry
+  | NewHealthCheckEntry;
 
 export enum Gender {
   Male = 'male',
   Female = 'female',
 }
+
+export enum EntryType {
+  HealthCheck = 'health check',
+  OccupationalHealthcare = 'occupational health care',
+  Hospital = 'hospital',
+}
+
+export interface RawEntryFormValues {
+  description: string;
+  date: string;
+  specialist: string;
+  diagnosisCodes: string[];
+  entryType: EntryType;
+  dischargeDate: string;
+  dischargeCriteria: string;
+  employerName: string;
+  sickLeaveStartDate: string;
+  sickLeaveEndDate: string;
+  healthCheckRating: HealthCheckRating;
+}
+

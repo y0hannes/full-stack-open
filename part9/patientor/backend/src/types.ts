@@ -16,7 +16,7 @@ export enum HealthCheckRating {
   'Healthy' = 0,
   'LowRisk' = 1,
   'HighRisk' = 2,
-  'CriticalRisk' = 3
+  'CriticalRisk' = 3,
 }
 
 interface HealthCheckEntry extends BaseEntry {
@@ -65,6 +65,18 @@ export interface Patient {
 export type NonSsnPatient = Omit<Patient, 'ssn' | 'entries'>;
 
 export type NewPatientEntry = Omit<Patient, 'id' | 'entries'>;
+
+export type NewHospitalEntry = Omit<HospitalEntry, 'id'>;
+export type NewOccupationalHealthcareEntry = Omit<
+  OccupationalHealthcareEntry,
+  'id'
+>;
+export type NewHealthCheckEntry = Omit<HealthCheckEntry, 'id'>;
+
+export type NewEntry =
+  | NewHospitalEntry
+  | NewOccupationalHealthcareEntry
+  | NewHealthCheckEntry;
 
 export enum Gender {
   Male = 'male',
