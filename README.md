@@ -24,14 +24,6 @@ This repo contains my personal solutions and exercises for each part of the cour
 - Cypress
 
 and more
-
-# 📚 Full Stack Open 2025
-
-Welcome to my repository for the [Full Stack Open 2025](https://fullstackopen.com/) course by the University of Helsinki. This course covers modern web development with JavaScript, React, Node.js, TypeScript, GraphQL, and more.
-
-
-This repository contains my solutions and exercises for all parts of the course.
-
 ---
 
 ## 📖 Course Overview
@@ -171,6 +163,13 @@ Each folder contains exercises and projects for its respective part.
 <!-- - [ ] Part 11: CI/CD → [⚙️ Repo Link](https://github.com/yourusername/fso-part11) -->
 <!-- - [ ] Part 12: Containers → [🐳 Repo Link](https://github.com/yourusername/fso-part12) -->
 <!-- - [ ] Part 13: Relational Databases → [🗃️ Repo Link](https://github.com/yourusername/fso-part13) -->
+
+---
+## 📄 Certificates
+
+- 🏆 [Full Stack Open 2025 Certificate](./certificates/certificate-fullstack-7.png)
+- 🏆 [Full Stack Open - GraphQl Certificate](./certificates/certificate-graphql.png)
+- 🏆 [Full Stack Open - TypeScript Certificate](./certificates/certificate-typescript.png)
 
 ---
 
